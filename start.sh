@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # BudgetBuddy Quick Start Script
-# This script will help you set up and run the application
+# This script will help you set up and run the application locally
 
-echo "🎯 BudgetBuddy - Quick Start Setup"
-echo "=================================="
+echo "🎯 BudgetBuddy - Local Development Setup"
+echo "========================================"
 echo ""
 
 # Check if Node.js is installed
@@ -14,6 +14,56 @@ if ! command -v node &> /dev/null; then
 fi
 
 echo "✅ Node.js version: $(node -v)"
+echo ""
+
+# Check if this is for local development or Render setup
+echo "Select setup mode:"
+echo "1) Local Development (requires MongoDB)"
+echo "2) Render Deployment Guide"
+read -p "Enter choice (1-2): " mode
+
+if [ "$mode" == "2" ]; then
+    echo ""
+    echo "🚀 Render Deployment Guide"
+    echo "=========================="
+    echo ""
+    echo "📋 Prerequisites:"
+    echo "   1. Create a Render account at https://render.com"
+    echo "   2. Create a MongoDB Atlas database"
+    echo "   3. Push your code to GitHub"
+    echo ""
+    echo "🔧 Steps to Deploy:"
+    echo ""
+    echo "   1. Create a New Web Service on Render"
+    echo "      - Connect your GitHub repository"
+    echo "      - Render will detect render.yaml automatically"
+    echo ""
+    echo "   2. Set Environment Variables in Render Dashboard:"
+    echo "      - NODE_ENV=production"
+    echo "      - PORT=5000 (or leave default)"
+    echo "      - MONGODB_URI=<your-mongodb-atlas-uri>"
+    echo "      - JWT_SECRET=<your-secret-key>"
+    echo "      - GOOGLE_CLIENT_ID=<your-google-client-id>"
+    echo "      - GOOGLE_CLIENT_SECRET=<your-google-client-secret>"
+    echo "      - EMAIL_USER=<your-email>"
+    echo "      - EMAIL_PASS=<your-email-app-password>"
+    echo "      - CLIENT_URL=https://budgetbuddy-web.github.io"
+    echo ""
+    echo "   3. Deploy Frontend to GitHub Pages:"
+    echo "      - Run: ./deploy.sh"
+    echo "      - Select option 2 (Frontend)"
+    echo ""
+    echo "   4. Update client API URL:"
+    echo "      - Edit client/package.json build script"
+    echo "      - Set REACT_APP_API_URL to your Render backend URL"
+    echo ""
+    echo "📚 For more details, check EXPLAIN.md"
+    echo ""
+    exit 0
+fi
+
+# Local development setup
+echo "📦 Setting up local development environment..."
 echo ""
 
 # Check if MongoDB is running
@@ -32,8 +82,12 @@ echo "Installing server dependencies..."
 cd server
 npm install
 if [ ! -f .env ]; then
-    cp .env.example .env
-    echo "✅ Created server/.env file"
+    echo "PORT=5000" > .env
+    echo "MONGODB_URI=mongodb://localhost:27017/budgetbuddy" >> .env
+    echo "JWT_SECRET=your-secret-key-change-in-production" >> .env
+    echo "NODE_ENV=development" >> .env
+    echo "CLIENT_URL=http://localhost:3000" >> .env
+    echo "✅ Created server/.env file with defaults"
     echo "⚠️  Please edit server/.env with your configurations"
 fi
 cd ..
@@ -42,11 +96,6 @@ cd ..
 echo "Installing client dependencies..."
 cd client
 npm install
-if [ ! -f .env ]; then
-    cp .env.example .env
-    echo "✅ Created client/.env file"
-    echo "⚠️  Please edit client/.env with your Google Client ID"
-fi
 cd ..
 
 echo ""
@@ -73,7 +122,6 @@ echo "Press Ctrl+C to stop the servers"
 echo ""
 
 # Start both servers using a process manager or in separate terminals
-# For simplicity, we'll show the commands
 echo "To start the servers, run these commands in separate terminals:"
 echo ""
 echo "Terminal 1 (Backend):"
@@ -82,7 +130,3 @@ echo ""
 echo "Terminal 2 (Frontend):"
 echo "  cd client && npm start"
 echo ""
-
-# Optional: If you have 'concurrently' installed, you can run both at once
-# npm install -g concurrently
-# concurrently "cd server && npm start" "cd client && npm start"

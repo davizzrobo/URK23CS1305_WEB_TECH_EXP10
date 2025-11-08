@@ -1047,54 +1047,101 @@ SOFTWARE.
 
 ---
 
-## � Deployment
+## 🚀 Deployment
+
+### **Quick Deploy (5 minutes)**
+
+**See `QUICK_DEPLOY.md` for fast setup or `RENDER_DEPLOYMENT.md` for detailed guide.**
 
 ### **Render Deployment (Recommended)**
 
-1. **Prepare for Deployment:**
-   ```bash
-   # Build client
-   cd client
-   npm run build
-   
-   # Test build locally
-   cd ../server
-   npm start
-   ```
+BudgetBuddy is configured for easy Render deployment with `render.yaml` blueprint.
 
-2. **Deploy to Render:**
-   - Push code to GitHub
-   - Connect repository to Render
-   - Set environment variables
-   - Deploy with `npm start` command
-
-3. **Environment Variables (Render):**
-   ```
-   PORT=10000
-   MONGODB_URI=your_mongodb_atlas_uri
-   JWT_SECRET=your_secure_jwt_secret
-   NODE_ENV=production
-   CLIENT_URL=https://your-app.onrender.com
-   ```
-
-### **Manual Deployment**
+#### **1. Deploy Backend to Render:**
 
 ```bash
-# Use deployment script
+# Method 1: Blueprint (Recommended)
+1. Go to https://dashboard.render.com
+2. Click "New +" → "Blueprint"
+3. Connect your GitHub repository
+4. Render auto-detects render.yaml
+5. Click "Apply"
+
+# Method 2: Manual
+1. Click "New +" → "Web Service"
+2. Build Command: npm install --prefix server
+3. Start Command: npm start --prefix server
+```
+
+#### **2. Set Environment Variables in Render Dashboard:**
+
+```env
+NODE_ENV=production
+PORT=5000
+MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/budgetbuddy
+JWT_SECRET=your-random-secret-key-here
+GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-client-secret
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-gmail-app-password
+CLIENT_URL=https://budgetbuddy-web.github.io
+```
+
+**Get your Render backend URL** (e.g., `https://budget-buddy-backend.onrender.com`)
+
+#### **3. Deploy Frontend to GitHub Pages:**
+
+```bash
+# Update client/package.json with your Render URL
+"build": "cross-env REACT_APP_API_URL=https://YOUR-RENDER-URL.onrender.com/api react-scripts build"
+
+# Deploy
 chmod +x deploy.sh
 ./deploy.sh
+# Select option 2 (Frontend)
+```
 
-# Or manual commands
-git add -A
-git commit -m "Production deployment"
+#### **4. Verify Deployment:**
+
+```bash
+# Test backend
+curl https://your-render-url.onrender.com/api/health
+
+# Visit frontend
+https://budgetbuddy-web.github.io
+```
+
+### **Local Development**
+
+```bash
+# Quick start with interactive setup
+chmod +x start.sh
+./start.sh
+
+# Or manually
+npm run install-all  # Install all dependencies
+npm run server      # Terminal 1: Start backend
+npm run client      # Terminal 2: Start frontend
+```
+
+### **Continuous Deployment**
+
+**Backend** (auto-deploys on git push):
+```bash
+git add .
+git commit -m "Update backend"
 git push origin main
 ```
 
-### **Auto-Deploy Setup**
-- Connected to GitHub repository
-- Automatic deployments on push to main
-- Build command: `npm install && cd client && npm install && npm run build`
-- Start command: `npm start`
+**Frontend**:
+```bash
+./deploy.sh  # Select option 2
+```
+
+### **Free Tier Notes**
+- Render: Services spin down after 15 min (30s cold start)
+- MongoDB Atlas: 512 MB storage limit
+- GitHub Pages: Unlimited bandwidth
 
 ---
 
@@ -1102,25 +1149,44 @@ git push origin main
 
 ### **Environment Variables**
 
-**Server (.env)**
+#### **Local Development (server/.env)**
 ```env
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/budgetbuddy
 JWT_SECRET=your_super_secret_jwt_key_minimum_32_characters
 NODE_ENV=development
 CLIENT_URL=http://localhost:3000
+GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-gmail-app-password
 ```
 
-**Client (.env)** (Optional)
-```env
-REACT_APP_API_URL=http://localhost:5000/api
+#### **Client Configuration (package.json)**
+```json
+// Development (default)
+"start": "react-scripts start"  // Uses http://localhost:5000/api
+
+// Production build
+"build": "cross-env REACT_APP_API_URL=https://your-render-url.onrender.com/api react-scripts build"
 ```
 
-**Production (Render)**
+#### **Production (Render Dashboard)**
+Set these in your Render service settings:
 ```env
-PORT=10000
+NODE_ENV=production
+PORT=5000
 MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/budgetbuddy
 JWT_SECRET=production_secure_secret_key_here
-NODE_ENV=production
-CLIENT_URL=https://budgetbuddy.onrender.com
+GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-gmail-app-password
+CLIENT_URL=https://budgetbuddy-web.github.io
 ```
+
+#### **Security Notes:**
+- Generate JWT_SECRET: `openssl rand -base64 32`
+- Use Gmail App Password (not regular password)
+- Whitelist 0.0.0.0/0 in MongoDB Atlas for Render
+- Keep .env files out of version control

@@ -22,12 +22,14 @@ const app = express();
 // Middleware
 app.use(helmet()); // Security headers
 
-// CORS configuration - allow GitHub Pages and localhost
+// CORS configuration - allow GitHub Pages, Render, and localhost
 const allowedOrigins = [
   'https://budgetbuddy-web.github.io',
   'https://davidnaruto11.github.io',
   'http://localhost:3000',
-  process.env.CLIENT_URL
+  'http://localhost:5000',
+  process.env.CLIENT_URL,
+  process.env.RENDER_EXTERNAL_URL
 ].filter(Boolean);
 
 app.use(cors({
