@@ -2,14 +2,14 @@
 # This file tells Render how to deploy your Node.js backend
 
 services:
-  # Full-Stack Application (Backend + Frontend)
+  # Backend API Service
   - type: web
-    name: budgetbuddy-fullstack
+    name: budgetbuddy-backend
     runtime: node
     plan: free
     region: singapore
-    buildCommand: npm install --prefix server && npm install --prefix client && npm run build --prefix client
-    startCommand: node server/server.js
+    buildCommand: npm install --prefix server
+    startCommand: npm start --prefix server
     envVars:
       - key: NODE_ENV
         value: production
