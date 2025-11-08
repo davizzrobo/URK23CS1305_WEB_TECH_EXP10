@@ -4,6 +4,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../contexts/AuthContext';
 import { useAssistant } from '../contexts/AssistantContext';
 import { toast } from 'react-toastify';
@@ -12,7 +13,7 @@ import './Auth.css';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login, isAuthenticated } = useAuth();
+  const { login, googleLogin, isAuthenticated } = useAuth();
   const { coverEyes, react } = useAssistant();
   const [formData, setFormData] = useState({
     email: '',
@@ -116,6 +117,35 @@ const Login = () => {
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
+
+        <div className="auth-divider">
+          <span>OR</span>
+        </div>
+
+        <div className="google-login-wrapper">
+          <GoogleLogin
+            onSuccess={async (credentialResponse) => {
+              try {
+                setLoading(true);
+                await googleLogin(credentialResponse.credential);
+                toast.success('Google login successful!');
+                navigate('/dashboard');
+              } catch (error) {
+                toast.error(error.message || 'Google login failed');
+              } finally {
+                setLoading(false);
+              }
+            }}
+            onError={() => {
+              toast.error('Google login failed');
+            }}
+            useOneTap
+            theme="filled_blue"
+            size="large"
+            text="signin_with"
+            width="100%"
+          />
+        </div>
 
         <div className="auth-links">
           <Link to="/forgot-password" className="forgot-password-link">
