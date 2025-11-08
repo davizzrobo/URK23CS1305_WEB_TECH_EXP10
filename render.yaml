@@ -2,13 +2,13 @@
 # This file tells Render how to deploy your Node.js backend
 
 services:
-  # Backend API Service
+  # Full-Stack Application (Backend + Frontend)
   - type: web
-    name: budget-buddy-backend
+    name: budgetbuddy-fullstack
     runtime: node
     plan: free
     region: singapore
-    buildCommand: npm install --prefix server
+    buildCommand: npm install --prefix server && npm install --prefix client && npm run build --prefix client
     startCommand: npm start --prefix server
     envVars:
       - key: NODE_ENV
@@ -28,5 +28,8 @@ services:
       - key: EMAIL_PASS
         sync: false
       - key: CLIENT_URL
-        value: https://davizzrobo.github.io/URK23CS1305_WEB_TECH_EXP10
+        fromService:
+          type: web
+          name: budgetbuddy-fullstack
+          property: host
     healthCheckPath: /api/health
