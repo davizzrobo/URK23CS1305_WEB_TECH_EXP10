@@ -28,25 +28,34 @@ const allowedOrigins = [
   'https://davizzrobo.github.io',
   'https://budgetbuddy-web.github.io',
   'https://davidnaruto11.github.io',
+  'https://urk23cs1305-web-tech-exp10-7yms.onrender.com',
   'http://localhost:3000',
   'http://localhost:5000',
   process.env.CLIENT_URL,
   process.env.RENDER_EXTERNAL_URL
 ].filter(Boolean);
 
+console.log('🌐 Allowed CORS origins:', allowedOrigins);
+
 app.use(cors({
   origin: function(origin, callback) {
+    console.log('🔍 CORS check for origin:', origin);
+    
     // Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
     
     // Check if origin is allowed
-    if (allowedOrigins.some(allowed => origin.startsWith(allowed))) {
+    if (allowedOrigins.includes(origin)) {
+      console.log('✅ Origin allowed:', origin);
       callback(null, true);
     } else {
+      console.log('❌ Origin blocked:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json()); // Parse JSON bodies
