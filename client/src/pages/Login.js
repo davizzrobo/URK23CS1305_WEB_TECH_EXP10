@@ -118,34 +118,37 @@ const Login = () => {
           </button>
         </form>
 
-        <div className="auth-divider">
-          <span>OR</span>
-        </div>
+        {process.env.REACT_APP_GOOGLE_CLIENT_ID && (
+          <>
+            <div className="auth-divider">
+              <span>OR</span>
+            </div>
 
-        <div className="google-login-wrapper">
-          <GoogleLogin
-            onSuccess={async (credentialResponse) => {
-              try {
-                setLoading(true);
-                await googleLogin(credentialResponse.credential);
-                toast.success('Google login successful!');
-                navigate('/dashboard');
-              } catch (error) {
-                toast.error(error.message || 'Google login failed');
-              } finally {
-                setLoading(false);
-              }
-            }}
-            onError={() => {
-              toast.error('Google login failed');
-            }}
-            useOneTap
-            theme="filled_blue"
-            size="large"
-            text="signin_with"
-            width="100%"
-          />
-        </div>
+            <div className="google-login-wrapper">
+              <GoogleLogin
+                onSuccess={async (credentialResponse) => {
+                  try {
+                    setLoading(true);
+                    await googleLogin(credentialResponse.credential);
+                    toast.success('Google login successful!');
+                    navigate('/dashboard');
+                  } catch (error) {
+                    toast.error(error.message || 'Google login failed');
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+                onError={() => {
+                  toast.error('Google login failed');
+                }}
+                useOneTap
+                theme="filled_blue"
+                size="large"
+                text="signin_with"
+              />
+            </div>
+          </>
+        )}
 
         <div className="auth-links">
           <Link to="/forgot-password" className="forgot-password-link">

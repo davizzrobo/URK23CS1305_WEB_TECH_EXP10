@@ -6,7 +6,8 @@ import './index.css';
 import App from './App';
 import ErrorBoundary from './components/ErrorBoundary';
 
-const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || '951625986713-ildgodtdrfeir852milrmfs58b4qgcbg.apps.googleusercontent.com';
+// Use environment variable or leave empty to disable Google OAuth
+const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || '';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
