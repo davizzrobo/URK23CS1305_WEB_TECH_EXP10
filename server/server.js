@@ -79,7 +79,10 @@ app.get('/api/health', (req, res) => {
 
 // Serve static files from React build (in production)
 if (process.env.NODE_ENV === 'production') {
-  const buildPath = path.join(__dirname, '../client/build');
+  // Use path relative to project root, not server directory
+  const buildPath = path.resolve(__dirname, '../client/build');
+  console.log('🎨 Looking for frontend build at:', buildPath);
+  
   app.use(express.static(buildPath));
   
   // All non-API routes serve the React app
@@ -91,7 +94,9 @@ if (process.env.NODE_ENV === 'production') {
         message: 'API route not found'
       });
     }
-    res.sendFile(path.join(buildPath, 'index.html'));
+    const indexPath = path.join(buildPath, 'index.html');
+    console.log('📄 Serving index.html from:', indexPath);
+    res.sendFile(indexPath);
   });
 }
 

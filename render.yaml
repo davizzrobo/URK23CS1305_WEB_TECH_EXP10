@@ -8,8 +8,8 @@ services:
     runtime: node
     plan: free
     region: singapore
-    buildCommand: cd server && npm install && cd ../client && npm install && npm run build && cd ..
-    startCommand: cd server && npm start
+    buildCommand: npm install --prefix server && npm install --prefix client && npm run build --prefix client
+    startCommand: node server/server.js
     envVars:
       - key: NODE_ENV
         value: production
