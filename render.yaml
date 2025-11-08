@@ -28,5 +28,5 @@ services:
       - key: EMAIL_PASS
         sync: false
       - key: CLIENT_URL
-        value: https://budgetbuddy-web.github.io
+        value: https://davizzrobo.github.io/URK23CS1305_WEB_TECH_EXP10
     healthCheckPath: /api/health

@@ -24,6 +24,7 @@ app.use(helmet()); // Security headers
 
 // CORS configuration - allow GitHub Pages, Render, and localhost
 const allowedOrigins = [
+  'https://davizzrobo.github.io',
   'https://budgetbuddy-web.github.io',
   'https://davidnaruto11.github.io',
   'http://localhost:3000',
